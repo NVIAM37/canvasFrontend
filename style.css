@@ -7,35 +7,32 @@
 html,body{
     height: 100%;
     width: 100%;
+    overflow-x: hidden;
 }
 #main{
     position: relative;
+    /* CRITICAL FIX: The overflow:hidden that broke everything is REMOVED from here */
+}
+
+/* This class will be added by JavaScript ONLY on desktops */
+#main.smooth-scroll {
     overflow: hidden;
 }
+
 #page{
     position: relative;
     height: 100vh;
     width: 100vw;
-    /* background-color: #f1f1f1; */
 }
-#page1{
+#page1, #page2, #page3 {
     position: relative;
     height: 100vh;
     width: 100vw;
-    /* background-color: #f1f1f1; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-#page2{
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    /* background-color: #f1f1f1; */
-}
-#page3{
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    /* background-color: #f1f1f1; */
-}
+
 canvas{
     position: relative;
     z-index: 9;
@@ -81,19 +78,14 @@ canvas{
     position: fixed;
     z-index: 99;
     padding: 0px 30px;
+    background-color: #d3d3d3;
 }
 #nav>h3{
     font-family: gilroy;
     font-weight: 400;
     font-size: 22px;
 }
-/* #nav>button{
-    padding: 10px 20px;
-    border-radius: 50px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-} */
+
 #page>h3{
     position: absolute;
     top: 55%;
@@ -177,66 +169,6 @@ canvas{
     background-color: #d3d3d3;
 }
 
-/* 
-button {
-    min-height: 53px;
-    min-width: 166px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-    position: relative;
-    cursor: pointer;
-    background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      color-stop(-12.74%, rgba(110, 239, 255, 0.5)),
-      color-stop(56.76%, rgba(106, 224, 255, 0.271))
-    );
-    background: linear-gradient(
-      90deg,
-      rgba(110, 239, 255, 0.5) -12.74%,
-      rgba(106, 224, 255, 0.271) 56.76%
-    );
-    border: 2px solid #acf7ff;
-    color: #000000;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  
-  button:before {
-    content: "";
-    width: 4px;
-    height: 28px;
-    background: #19173b;
-    border: 2px solid #acf7ff;
-    -webkit-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-    position: absolute;
-    border-top: 0;
-    border-left: 0;
-    border-bottom: 0;
-    bottom: -7px;
-    left: 4px;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
-  }
-  
-  button:after {
-    content: "";
-    position: absolute;
-    left: -2px;
-    bottom: -2px;
-    border-top: 15px solid transparent;
-    border-left: 15px solid #fffcf7;
-  } */
-
 button {
     position: relative;
     height: 50px;
@@ -274,10 +206,6 @@ button {
     cursor: crosshair;
    }
    
-   /* button:active {
-    transform: scale(0.95);
-   } */
-   
    button:hover:before {
     height: calc(100% - 32px);
     top: 16px;
@@ -305,9 +233,7 @@ button {
     border-radius: 0;
     box-sizing: border-box;
     color: #fff;
-
     display: inline-block;
-    /* float: right; */
     font-weight: 700;
     cursor: default;
     letter-spacing: 0.05em;
@@ -413,11 +339,14 @@ button {
   }
 
   footer {
-    padding: 20px;
+    position: relative;
+    z-index: 10;
+    padding: 35px 15px;
     background-color: #d3d3d3;
     color: #000;
     text-align: center;
     font-family: 'gilroy', sans-serif;
+    width: 100%;
 }
 
 .footer-content {
@@ -426,6 +355,7 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; 
 }
 
 .footer-content .logo {
@@ -447,4 +377,126 @@ button {
 
 .footer-content .shoutout a:hover {
     text-decoration: underline;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    #nav {
+        padding: 0 20px;
+    }
+    #nav .h3 {
+        transform: scale(0.9);
+    }
+    #nav .fancy {
+        transform: scale(0.85);
+    }
+    #loop {
+        font-size: 60px;
+        top: 35%;
+    }
+
+    #page>h3 {
+        top: 58%;
+        left: 5%;
+        right: 5%;
+        text-align: center;
+        padding: 0 10px;
+        font-size: 16px;
+    }
+
+    #page>h4 {
+        top: 70%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+    }
+
+    .page-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        gap: 2vh;
+    }
+
+    #page1>#right-text, #page1>#left-text,
+    #page2>#text1, #page2>#text2,
+    #page3>#text3 {
+        position: static;
+        width: 90%;
+        text-align: center;
+    }
+    #page1>#right-text>h1, #page1>#left-text>h1 {
+        font-size: 40px;
+    }
+    #page2>#text1>h1 {
+        font-size: 50px;
+    }
+    #page3>#text3>h1 {
+        font-size: 60px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    #nav {
+        padding: 0 10px;
+        height: 8%;
+    }
+    #nav .h3 {
+        transform: scale(0.8);
+        transform-origin: left;
+    }
+    #nav .fancy {
+        transform: scale(0.7);
+        transform-origin: right;
+    }
+    
+    #loop {
+        font-size: 40px;
+        top: 38%;
+    }
+
+    #page>h3 {
+       display: none;
+    }
+
+    #page>h4 {
+        top: 65%;
+        font-size: 14px;
+    }
+    
+    #page1>#right-text>h1, #page1>#left-text>h1 {
+        font-size: 30px;
+        line-height: 1.4;
+    }
+    #page2>#text1>h1 {
+        font-size: 40px;
+    }
+    #page2>#text2>p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    #page3>#text3>h1 {
+        font-size: 45px;
+    }
+    
+    /* --- YOUR REQUESTED FOOTER FIX --- */
+    /* This new code reduces the footer's height without breaking scroll */
+    footer {
+        padding-top: 15px;      /* Reduced from 35px */
+        padding-bottom: 15px;   /* Reduced from 35px */
+    }
+
+    .footer-content {
+        gap: 10px; /* Reduces space between stacked logo and text */
+    }
+    /* --- END OF FIX --- */
 }
