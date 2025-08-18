@@ -8,10 +8,16 @@ html,body{
     height: 100%;
     width: 100%;
     overflow-x: hidden;
+    /* Mobile scroll optimizations */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 #main{
     position: relative;
     /* CRITICAL FIX: The overflow:hidden that broke everything is REMOVED from here */
+    /* Mobile scroll optimizations */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 
 /* This class will be added by JavaScript ONLY on desktops */
