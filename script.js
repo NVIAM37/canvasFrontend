@@ -1,11 +1,7 @@
 function init() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // More reliable device detection that works across all browsers and devices
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|FxiOS/i.test(navigator.userAgent);
-    const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth > 768;
-    const isDesktop = !isMobileDevice && !isTablet && window.innerWidth > 768;
-    
+    const isDesktop = window.innerWidth > 768;
     let locoScroll;
 
     if (isDesktop) {
@@ -31,25 +27,11 @@ function init() {
 
         ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
         ScrollTrigger.refresh();
-    } else {
-        // --- MOBILE/TABLET SETUP ---
-        // Configure ScrollTrigger for mobile devices
-        ScrollTrigger.config({
-            ignoreMobileResize: true,
-            autoRefreshEvents: "visibilitychange,DOMContentLoaded,load"
-        });
-        
-        // Force native scrolling on mobile
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Ensure proper touch handling
-        if (isTablet) {
-            document.documentElement.style.touchAction = 'pan-y';
-        }
     }
 
     // --- UNIVERSAL ANIMATION SETUP ---
-    // This code runs on all devices with proper scroller configuration
+    // This code runs on all devices.
+    // The `scroller` property is conditionally set based on device type.
     const scrollerTarget = isDesktop ? "#main" : null;
 
     const canvas = document.querySelector("canvas");
@@ -379,40 +361,19 @@ function init() {
         images.push(img);
     }
 
-    // Canvas animation with proper mobile support
     gsap.to(imageSeq, {
         frame: frameCount - 1,
         snap: "frame",
         ease: 'none',
         scrollTrigger: {
-            scrub: isDesktop ? 0.15 : 0.5, // Slower scrub on mobile for better performance
+            scrub: 0.15,
             trigger: `#page>canvas`,
             start: `top top`,
             end: `600% top`,
             scroller: scrollerTarget,
-            onUpdate: function() {
-                // Ensure render is called on mobile
-                if (!isDesktop) {
-                    render();
-                }
-            }
         },
         onUpdate: render,
     });
-
-    // Mobile-specific canvas optimization
-    if (!isDesktop) {
-        // Ensure canvas is properly sized for mobile
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            render();
-        };
-        
-        // Listen for orientation changes on mobile
-        window.addEventListener('orientationchange', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
-    }
 
     images[1].onload = render;
 
@@ -431,7 +392,6 @@ function init() {
         ctx.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
     }
 
-    // Canvas pinning with mobile support
     ScrollTrigger.create({
         trigger: "#page>canvas",
         pin: true,
@@ -440,11 +400,10 @@ function init() {
         end: `600% top`,
     });
 
-    // Page pinning with proper mobile support
-    const pageSections = ["#page1", "#page2", "#page3"];
-    pageSections.forEach(pageId => {
+    // Pinning subsequent pages
+    document.querySelectorAll(".page-content").forEach(page => {
         ScrollTrigger.create({
-            trigger: pageId,
+            trigger: page,
             start: "top top",
             end: "bottom top",
             pin: true,
@@ -453,44 +412,9 @@ function init() {
         });
     });
 
-    // Mobile-specific optimizations and refresh
-    if (!isDesktop) {
-        // Delay refresh to ensure all elements are loaded
-        setTimeout(() => {
-            ScrollTrigger.refresh();
-        }, 300);
-        
-        // Mobile touch optimizations
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-        
-        // Ensure smooth scrolling on mobile
-        document.addEventListener('touchmove', function(event) {
-            // Allow normal scrolling
-        }, { passive: true });
-        
-        // Additional mobile optimizations
-        if (isTablet) {
-            document.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-        }
-        
-        // Force a second refresh for mobile to ensure everything works
-        setTimeout(() => {
-            ScrollTrigger.refresh();
-        }, 1000);
-    }
-
     // Universal Scroll-to-Top button
     document.querySelector("#nav .h3").addEventListener("click", function () {
-        if (isDesktop && locoScroll) {
+        if (isDesktop) {
             locoScroll.scrollTo(0);
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
