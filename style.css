@@ -18,16 +18,15 @@ html,body{
 }
 #main{
     position: relative;
-    /* CRITICAL FIX: The overflow:hidden that broke everything is REMOVED from here */
     /* Mobile scroll optimizations */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
 }
 
 /* This class will be added by JavaScript ONLY on desktops */
-#main.smooth-scroll {
+/* #main.smooth-scroll {
     overflow: hidden;
-}
+} */
 
 #page{
     position: relative;
@@ -356,7 +355,7 @@ button {
   footer {
     position: relative;
     z-index: 10;
-    padding: 35px 15px;
+    padding: 15px 15px;
     background-color: #d3d3d3;
     color: #000;
     text-align: center;
@@ -371,6 +370,7 @@ button {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap; 
+    gap : 10px;
 }
 
 .footer-content .logo {
